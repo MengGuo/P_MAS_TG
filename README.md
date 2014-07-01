@@ -14,6 +14,7 @@ Features
 * Action model can be muted if only motion is concerned
 * Soft specification is optional
 * NetworkX for the graph structure
+* Static or on-the-fly construction of the product automaton
 * Stand-alone planner
 
 ----
