@@ -8,11 +8,6 @@ from networkx.classes.digraph import DiGraph
 def distance(pose1, pose2):
     return (sqrt((pose1[0]-pose2[0])**2+(pose1[1]-pose2[1])**2))
 
-def reach_waypoint(pose, waypoint, margin):
-    if distance(pose, waypoint)<=margin:
-        return True
-    else:
-        return False
 
 class MotionFts(DiGraph):
     def __init__(self, node_dict, symbols, ts_type):

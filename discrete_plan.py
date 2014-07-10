@@ -5,6 +5,10 @@ from collections import defaultdict
 from networkx import dijkstra_predecessor_and_distance
 import time 
 
+
+#===========================================
+#optimal initial synthesis
+#===========================================
 def dijkstra_plan_networkX(product, beta=10):
 	# requires a full construct of product automaton
 	start = time.time()
@@ -43,12 +47,13 @@ def dijkstra_plan_networkX(product, beta=10):
 	print 'no accepting run found in optimal planning!'
 
 
-def dijkstra_plan_optimal(product, beta=10):
+def dijkstra_plan_optimal(product, beta=10, start_set=None):
 	start = time.time()
 	#print 'dijkstra plan started!'
 	runs = {}
 	accept_set = product.graph['accept']
-	init_set = product.graph['initial']
+	if start_set == None:
+		init_set = product.graph['initial']
 	#print 'number of accepting states %d' %(len(accept_set))
 	#print 'number of initial states %d' %(len(init_set))
 	loop_dict = {}
@@ -171,6 +176,29 @@ def compute_path_from_pre(pre, target):
 	path.reverse()
 	return path
 
+#===========================================
+#improve the current plan
+#===========================================
+def prod_states_given_history(trace, product):
+	S1 = set([q for q in product.graph[initial] if q[0]==trace[0]])
+	for p in trace[1:-1]:
+		S2 = set()
+		for f_node in S1:
+			for t_node in product.fly_successors_iter(f_node):
+				if t_node[0]==p:
+					S2.add(t_node)
+		S1 = S2.copy()
+	return S1
+
+
+def improve_plan_given_history(product, new_initial_set):
+	new_run=dijkstra_plan_optimal(product, 10, new_initial_set)
+	return new_run
+
+
+#===========================================
+#local revision, in case of system update
+#===========================================
 def validate_and_revise_after_ts_change(run, product, sense_info, com_info):
 	new_prefix = None
 	new_suffix = None
@@ -219,6 +247,7 @@ def dijkstra_revise(product, run_segment, broken_edge_index):
 		index = len(run_segment)-index-1
 		new_run_segment = run_segment[0:(broken_edge_index-1)] + bridge + run_segment[(index+1):-1]
 		return new_run_segment
+
 
 def dijkstra_revise_once(product, run_segment, broken_edge_index):
 	for (bridge, cost) in dijkstra_targets(product, run_segment[broken_edge_index-1], set([run_segment[-1]])):
