@@ -3,7 +3,6 @@ from buchi import mission_to_buchi
 from product import ProdAut
 from ts import distance, reach_waypoint
 from discrete_plan import dijkstra_plan_networkX, dijkstra_plan_optimal, improve_plan_given_history
-from graphics import visualize_office
 
 
 class ltl_planner(object):
@@ -45,30 +44,33 @@ class ltl_planner(object):
 		self.opt_log.append((self.Time, self.run.pre_plan, self.run.suf_plan, self.run.precost, self.run.sufcost, self.run.totalcost))
 		self.last_time = self.Time
 		self.acc_change = 0
-		self.index = 0
+		self.index = 1
 		self.segment = 'line'
 		self.next_move = self.run.pre_plan[self.index]
 		return plantime
 
 	def find_next_move(self):
 		if self.segment == 'line' and self.index < len(self.run.pre_plan)-1:
-				self.index += 1
-				self.next_move = self.run.pre_plan[self.index]
-				return self.run.line[self.index-1]
+			self.trace.append(self.run.line[self.index])
+			self.index += 1
+			self.next_move = self.run.pre_plan[self.index]
 		elif self.segment == 'line' and self.index == len(self.run.pre_plan)-1:
-				self.index = 0
-				self.segment = 'loop'
-				self.next_move = self.run.suf_plan[self.index]
-				return self.run.loop[self.index-1]
+			self.trace.append(self.run.line[self.index])
+			self.index = 0
+			self.segment = 'loop'
+			self.next_move = self.run.suf_plan[self.index]
 		elif self.segment == 'loop' and self.index < len(self.run.suf_plan)-1:
-				self.index += 1
-				self.next_move = self.run.suf_plan[self.index]
-				return self.run.loop[self.index-1]
+			self.trace.append(self.run.loop[self.index])
+			self.index += 1
+			self.segment = 'loop'
+			self.next_move = self.run.suf_plan[self.index]
 		elif self.segment == 'loop' and self.index == len(self.run.suf_plan)-1:
-				self.index = 0
-				self.segment = 'loop'
-				self.next_move = self.run.suf_plan[self.index]
-				return self.run.loop[self.index-1]
+			self.trace.append(self.run.loop[self.index])
+			self.index = 0
+			self.segment = 'loop'
+			self.next_move = self.run.suf_plan[self.index]
+		return self.next_move
+
 
 	def update(self,object_name):
 		MotionFts = self.product.graph['ts'].graph['region']
@@ -81,7 +83,7 @@ class ltl_planner(object):
 
 	def replan(self):
 		self.run = improve_plan_given_history(self.product, self.trace)
-		self.index = 0
+		self.index = 1
 		self.segment = 'line'
 		self.next_move = self.run.pre_plan[self.index]
 

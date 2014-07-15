@@ -44,6 +44,7 @@ def dijkstra_plan_networkX(product, beta=10):
 		print '\n==================\n'
 		print 'dijkstra_plan_networkX done within %.2fs: precost %.2f, sufcost %.2f \n' %(time.time()-start, precost, sufcost)
 		return run, time.time()-start
+		print '\n==================\n'
 	print 'no accepting run found in optimal planning!'
 
 
@@ -54,6 +55,8 @@ def dijkstra_plan_optimal(product, beta=10, start_set=None):
 	accept_set = product.graph['accept']
 	if start_set == None:
 		init_set = product.graph['initial']
+	else:
+		init_set = start_set
 	#print 'number of accepting states %d' %(len(accept_set))
 	#print 'number of initial states %d' %(len(init_set))
 	loop_dict = {}
@@ -179,20 +182,25 @@ def compute_path_from_pre(pre, target):
 #===========================================
 #improve the current plan
 #===========================================
-def prod_states_given_history(trace, product):
-	S1 = set([q for q in product.graph[initial] if q[0]==trace[0]])
-	for p in trace[1:-1]:
-		S2 = set()
-		for f_node in S1:
-			for t_node in product.fly_successors_iter(f_node):
-				if t_node[0]==p:
-					S2.add(t_node)
-		S1 = S2.copy()
-	return S1
+def prod_states_given_history(product, trace):
+	if trace:
+		S1 = set([q for q in product.graph['initial'] if q[0]==trace[0]])
+		for p in trace[1:-1]:
+			S2 = set()
+			for f_node in S1:
+				for t_node in product.fly_successors_iter(f_node):
+					if t_node[0]==p:
+						S2.add(t_node)
+			S1 = S2.copy()
+		return S1
+	else:
+		return set()
 
 
-def improve_plan_given_history(product, new_initial_set):
-	new_run=dijkstra_plan_optimal(product, 10, new_initial_set)
+def improve_plan_given_history(product, trace):
+	new_initial_set = prod_states_given_history(product, trace)
+	if new_initial_set:
+		new_run=dijkstra_plan_optimal(product, 10, new_initial_set)
 	return new_run
 
 

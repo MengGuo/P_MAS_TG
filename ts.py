@@ -16,10 +16,9 @@ def reach_waypoint(pose, waypoint, margin):
 
 class MotionFts(DiGraph):
     def __init__(self, node_dict, symbols, ts_type):
-        DiGraph.__init__(self, symbols=symbols, type=ts_type, initial=None)
+        DiGraph.__init__(self, symbols=symbols, type=ts_type, initial=set())
         for (n, label) in node_dict.iteritems():
             self.add_node(n, label=label, status='confirmed')
-            self.add_edge(n, n, weight=1) 
 
     def add_un_edges(self, edge_list, unit_cost=1):
         for edge in edge_list:
@@ -33,12 +32,12 @@ class MotionFts(DiGraph):
         for f_node in self.nodes_iter():
             for t_node in self.nodes_iter():
                 dist = distance(f_node, t_node)
-                self.add_edge(f_node, t_node, weight=dist*unit_cost)
-                self.add_edge(t_node, f_node, weight=dist*unit_cost)                
+                if (f_node, t_node) not in self.edges():
+                    self.add_edge(f_node, t_node, weight=dist*unit_cost)
 
     def set_initial(self, pose):
         init_node = self.closest_node(pose)
-        self.graph['initial'] = init_node
+        self.graph['initial'] = set([init_node])
         return init_node
 
     def closest_node(self, pose):
