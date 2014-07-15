@@ -150,7 +150,7 @@ def dijkstra_loop(product, prod_accep):
 	for (tail, cost) in dijkstra_targets(product, prod_accep, accept_pre_set):
 		if tail:
 			accep_pre = tail[-1]
-			paths[accep_pre] = tail + prod_accep
+			paths[accep_pre] = tail
 			costs[accep_pre] = cost + product.edge[accep_pre][prod_accep]['weight']
 	if costs:
 		min_pre = min(costs.keys(), key=lambda p: costs[p])
@@ -184,7 +184,7 @@ def compute_path_from_pre(pre, target):
 #===========================================
 def prod_states_given_history(product, trace):
 	if trace:
-		S1 = set([q for q in product.graph['initial'] if q[0]==trace[0]])
+		S1 = set([(trace[0],p) for p in product.graph['buchi'].graph['initial']])
 		for p in trace[1:-1]:
 			S2 = set()
 			for f_node in S1:
@@ -200,8 +200,10 @@ def prod_states_given_history(product, trace):
 def improve_plan_given_history(product, trace):
 	new_initial_set = prod_states_given_history(product, trace)
 	if new_initial_set:
-		new_run=dijkstra_plan_optimal(product, 10, new_initial_set)
-	return new_run
+		new_run, time=dijkstra_plan_optimal(product, 10, new_initial_set)
+		return new_run
+	else:
+		return None
 
 
 #===========================================

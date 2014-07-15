@@ -33,14 +33,12 @@ class ltl_planner(object):
 			self.product.build_initial()
 			self.product.build_accept()
 			self.run, plantime = dijkstra_plan_optimal(self.product, self.beta)
-		print 'the plan prefix:\n'
-		#print [[n, self.product.graph['ts'].graph['region'].node[n]['label']] for n in self.run.pre_plan]
-		print [n for n in self.run.pre_plan]
-		print '\n'
-		print 'the plan suffix:\n'
-		#print [[n, self.product.graph['ts'].graph['region'].node[n]['label']] for n in self.run.suf_plan]
-		print [n for n in self.run.suf_plan]
-		print '\n'
+		#print 'the plan prefix:\n'
+		#print [n for n in self.run.pre_plan]
+		#print '\n'
+		#print 'the plan suffix:\n'
+		#print [n for n in self.run.suf_plan]
+		#print '\n'
 		self.opt_log.append((self.Time, self.run.pre_plan, self.run.suf_plan, self.run.precost, self.run.sufcost, self.run.totalcost))
 		self.last_time = self.Time
 		self.acc_change = 0
@@ -82,10 +80,13 @@ class ltl_planner(object):
 			return True
 
 	def replan(self):
-		self.run = improve_plan_given_history(self.product, self.trace)
-		self.index = 1
-		self.segment = 'line'
-		self.next_move = self.run.pre_plan[self.index]
+		new_run = improve_plan_given_history(self.product, self.trace)
+		if (new_run) and (new_run.pre_plan !=self.run.pre_plan[self.index:-1]):
+			self.run = new_run
+			self.index = 1
+			self.segment = 'line'
+			self.next_move = self.run.pre_plan[self.index]
+			print 'Plan adapted!\n'
 
 
 
