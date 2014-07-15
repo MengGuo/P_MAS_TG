@@ -6,15 +6,20 @@ from math import sqrt
 from networkx.classes.digraph import DiGraph
 
 def distance(pose1, pose2):
-    return (sqrt((pose1[0]-pose2[0])**2+(pose1[1]-pose2[1])**2))
+    return (sqrt((pose1[0]-pose2[0])**2+(pose1[1]-pose2[1])**2)+0.001)
 
+def reach_waypoint(pose, waypoint, margin):
+    if distance(pose, waypoint)<=margin:
+        return True
+    else:
+        return False
 
 class MotionFts(DiGraph):
     def __init__(self, node_dict, symbols, ts_type):
-        DiGraph.__init__(self, symbols=symbols, type=ts_type, initial=set())
+        DiGraph.__init__(self, symbols=symbols, type=ts_type, initial=None)
         for (n, label) in node_dict.iteritems():
             self.add_node(n, label=label, status='confirmed')
-            self.add_edge(n, n, weight=0.1)  
+            self.add_edge(n, n, weight=1) 
 
     def add_un_edges(self, edge_list, unit_cost=1):
         for edge in edge_list:
@@ -24,9 +29,16 @@ class MotionFts(DiGraph):
             self.add_edge(f_node, t_node, weight=dist*unit_cost)
             self.add_edge(t_node, f_node, weight=dist*unit_cost)
 
+    def add_full_edges(self,unit_cost=1):
+        for f_node in self.nodes_iter():
+            for t_node in self.nodes_iter():
+                dist = distance(f_node, t_node)
+                self.add_edge(f_node, t_node, weight=dist*unit_cost)
+                self.add_edge(t_node, f_node, weight=dist*unit_cost)                
+
     def set_initial(self, pose):
         init_node = self.closest_node(pose)
-        self.graph['initial'] = set([init_node])
+        self.graph['initial'] = init_node
         return init_node
 
     def closest_node(self, pose):
@@ -63,12 +75,10 @@ class MotionFts(DiGraph):
             self.remove_edge(e[0], e[1])
             changed_regs.add(e[0])
             self.node[close_node]['status'] = 'notconfirmed'
-        return changed_regs
+        return chnaged_regs
 
 class ActionModel(object):
     # action_dict = {act_name: (cost, guard_formula, label)}
-    # where cost: action cost; guard_formula: action condition
-    # label: propositions satisifed after action is done
     def __init__(self, action_dict):
         self.raw = action_dict
         self.action = dict()
@@ -98,7 +108,6 @@ class MotActModel(DiGraph):
         if not self.has_node(prod_node):
             new_label = self.graph['region'].node[reg]['label'].union(self.graph['action'].action[act][2])
             self.add_node(prod_node, label=new_label, region=reg, action=act, marker='unvisited')
-            # 'unvisited' by graph search algorithm
             if ((reg in self.graph['region'].graph['initial']) and (act == 'None')):
                 self.graph['initial'].add(prod_node)
         return prod_node
@@ -120,20 +129,18 @@ class MotActModel(DiGraph):
                 label = self.graph['region'].node[reg]['label']
                 for act_to in self.graph['action'].allowed_actions(label):
                     prod_node_to = self.composition(reg, act_to)
-                    self.add_edge(prod_node, prod_node_to, weight=self.graph['action'].action[act_to][0], label= act_to)
+                    self.add_edge(prod_node, prod_node_to, weight=self.graph['action'].action[act_to][0], label= act_to, marker= 'visited')
                 # motions
                 for reg_to in self.graph['region'].successors_iter(reg):
                     if reg_to != reg:
                         prod_node_to = self.composition(reg_to, 'None')
-                        self.add_edge(prod_node, prod_node_to, weight=self.graph['region'][reg][reg_to]['weight'], label= 'goto')
+                        self.add_edge(prod_node, prod_node_to, weight=self.graph['region'][reg][reg_to]['weight'], label= 'goto', marker= 'visited')
     
-    def fly_successors_iter(self, prod_node):
-        # successor iterators for MotActModel
-        # construct it on the fly 
+    def fly_successors_iter(self, prod_node): 
         reg, act = self.projection(prod_node)
+        # been visited before, and hasn't changed 
         if ((self.node[prod_node]['marker'] == 'visited') and 
-            (self.graph['region'].node[reg]['status'] == 'confirmed')):
-            # been visited by graph search before, and hasn't changed 
+            (self.graph['region'].node[self.node[prod_node]['region']]['status'] == 'confirmed')):
             for prod_node_to in self.successors_iter(prod_node):
                 yield prod_node_to, self.edge[prod_node][prod_node_to]['weight']
         else:
@@ -152,7 +159,7 @@ class MotActModel(DiGraph):
                     cost = self.graph['region'][reg][reg_to]['weight']
                     self.add_edge(prod_node, prod_node_to, weight=cost, label= 'goto')         
                     yield prod_node_to, cost
-            self.graph['region'].node[reg]['status'] = 'confirmed'
+            self.graph['region'].node[self.node[prod_node]['region']]['status'] = 'confirmed'
             self.node[prod_node]['marker'] = 'visited'
 
     def fly_predecessors_iter(self, prod_node): 

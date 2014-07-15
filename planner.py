@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from buchi import mission_to_buchi
 from product import ProdAut
-from discrete_plan import dijkstra_plan_networkX, dijkstra_plan_optimal
+from ts import distance, reach_waypoint
+from discrete_plan import dijkstra_plan_networkX, dijkstra_plan_optimal, improve_plan_given_history
+from graphics import visualize_office
 
 
 class ltl_planner(object):
@@ -52,15 +54,44 @@ class ltl_planner(object):
 		if self.segment == 'line' and self.index < len(self.run.pre_plan)-1:
 				self.index += 1
 				self.next_move = self.run.pre_plan[self.index]
+				return self.run.line[self.index-1]
 		elif self.segment == 'line' and self.index == len(self.run.pre_plan)-1:
 				self.index = 0
 				self.segment = 'loop'
 				self.next_move = self.run.suf_plan[self.index]
+				return self.run.loop[self.index-1]
 		elif self.segment == 'loop' and self.index < len(self.run.suf_plan)-1:
 				self.index += 1
 				self.next_move = self.run.suf_plan[self.index]
+				return self.run.loop[self.index-1]
 		elif self.segment == 'loop' and self.index == len(self.run.suf_plan)-1:
-				self.index = 1
+				self.index = 0
 				self.segment = 'loop'
 				self.next_move = self.run.suf_plan[self.index]
+				return self.run.loop[self.index-1]
+
+	def update(self,object_name):
+		MotionFts = self.product.graph['ts'].graph['region']
+		cur_region = MotionFts.closest_node(self.cur_pose)
+		sense_info = dict()
+		sense_info['label'] = set([(cur_region,set([object_name,]),set()),]) 
+		changes = MotionFts.update_after_region_change(sense_info,None)
+		if changes:
+			return True
+
+	def replan(self):
+		self.run = improve_plan_given_history(self.product, self.trace)
+		self.index = 0
+		self.segment = 'line'
+		self.next_move = self.run.pre_plan[self.index]
+
+
+
+
+
+
+
+
+
+
 
