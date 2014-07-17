@@ -41,10 +41,10 @@ def dijkstra_plan_networkX(product, beta=10):
 	if runs:
 		prefix, precost, suffix, sufcost = min(runs.values(), key = lambda p: p[1] + beta*p[3])
 		run = ProdAut_Run(product, prefix, precost, suffix, sufcost, precost+beta*sufcost)
-		print '\n==================\n'
-		print 'dijkstra_plan_networkX done within %.2fs: precost %.2f, sufcost %.2f \n' %(time.time()-start, precost, sufcost)
+		#print '\n==================\n'
+		print 'dijkstra_plan_networkX done within %.2fs: precost %.2f, sufcost %.2f' %(time.time()-start, precost, sufcost)
 		return run, time.time()-start
-		print '\n==================\n'
+		#print '\n==================\n'
 	print 'no accepting run found in optimal planning!'
 
 
@@ -75,7 +75,7 @@ def dijkstra_plan_optimal(product, beta=10, start_set=None):
 	if runs:
 	 	prefix, precost, suffix, sufcost = min(runs.values(), key = lambda p: p[1] + beta*p[3])
 	 	run = ProdAut_Run(product, prefix, precost, suffix, sufcost, precost+beta*sufcost)
-	 	print '\n==================\n'
+	 	#print '\n==================\n'
 	 	print 'optimal_dijkstra_olf done within %.2fs: precost %.2f, sufcost %.2f' %(time.time()-start, precost, sufcost)
 	 	return run, time.time()-start
 	print 'no accepting run found in optimal planning!'

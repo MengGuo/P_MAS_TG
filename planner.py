@@ -33,11 +33,11 @@ class ltl_planner(object):
 			self.product.build_initial()
 			self.product.build_accept()
 			self.run, plantime = dijkstra_plan_optimal(self.product, self.beta)
-		#print 'the plan prefix:\n'
-		#print [n for n in self.run.pre_plan]
+		print 'the plan prefix:\n'
+		print [n for n in self.run.pre_plan]
 		#print '\n'
-		#print 'the plan suffix:\n'
-		#print [n for n in self.run.suf_plan]
+		print 'the plan suffix:\n'
+		print [n for n in self.run.suf_plan]
 		#print '\n'
 		self.opt_log.append((self.Time, self.run.pre_plan, self.run.suf_plan, self.run.precost, self.run.sufcost, self.run.totalcost))
 		self.last_time = self.Time
@@ -86,7 +86,7 @@ class ltl_planner(object):
 			self.index = 1
 			self.segment = 'line'
 			self.next_move = self.run.pre_plan[self.index]
-			print 'Plan adapted!\n'
+			print 'Plan adapted!'
 
 
 
