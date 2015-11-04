@@ -113,11 +113,11 @@ class ProdAut_Run(object):
                 if len(self.line) == 2:
                         self.pre_ts_edges = [(self.line[0], self.line[1])]
                 else:
-		        self.pre_ts_edges = zip(self.line[0:-2], self.line[1:-1])
+		        self.pre_ts_edges = zip(self.line[0:-1], self.line[1:])
                 if len(self.loop) == 2:
                         self.suf_ts_edges = [(self.loop[0], self.loop[1])]
                 else:
-		        self.suf_ts_edges = zip(self.loop[0:-2], self.loop[1:-1])
+		        self.suf_ts_edges = zip(self.loop[0:-1], self.loop[1:])
                 self.suf_ts_edges.append((self.loop[-1],self.loop[0]))
 		# output plan
 		self.pre_plan = []

@@ -19,6 +19,7 @@ class MotionFts(DiGraph):
         DiGraph.__init__(self, symbols=symbols, type=ts_type, initial=set())
         for (n, label) in node_dict.iteritems():
             self.add_node(n, label=label, status='confirmed')
+            
 
     def add_un_edges(self, edge_list, unit_cost=1):
         for edge in edge_list:
@@ -27,6 +28,9 @@ class MotionFts(DiGraph):
             dist = distance(f_node, t_node)
             self.add_edge(f_node, t_node, weight=dist*unit_cost)
             self.add_edge(t_node, f_node, weight=dist*unit_cost)
+        for node in self.nodes_iter():
+            self.add_edge(node, node, weight=unit_cost)
+        
 
     def add_full_edges(self,unit_cost=1):
         for f_node in self.nodes_iter():
