@@ -1,0 +1,51 @@
+Fix simplify_bstates() to ensure that there are not multiple states with the same name/label
+
+Example formulas exhibiting the problem:
+[](<>[]p1 U X[]<>Xp0)
+[](X<>Xp0 U p1) U !Xp1
+
+diff --git a/buchi.c b/buchi.c
+--- a/buchi.c
++++ b/buchi.c
+@@ -40,6 +40,8 @@
+   init_size, *final;
+ extern void put_uform(void);
+ 
++extern int gstate_id;
++
+ extern FILE *tl_out;	
+ BState *bstack, *bstates, *bremoved;
+ BScc *scc_stack;
+@@ -205,7 +207,7 @@
+ 
+ int simplify_bstates() /* eliminates redundant states */
+ {
+-  BState *s, *s1;
++  BState *s, *s1, *s2;
+   int changed = 0;
+ 
+   if(tl_stats) getrusage(RUSAGE_SELF, &tr_debut);
+@@ -256,6 +258,23 @@
+   }
+   retarget_all_btrans();
+ 
++  /*
++   * As merging equivalent states can change the 'final' attribute of
++   * the remaining state, it is possible that now there are two
++   * different states with the same id and final values.
++   * This would lead to multiply-defined labels in the generated neverclaim.
++   * We iterate over all states and assign new ids (previously unassigned)
++   * to these states to disambiguate.
++   * Fix from ltl3ba.
++   */
++  for (s = bstates->nxt; s != bstates; s = s->nxt) {  /* For all states s*/
++    for (s2 = s->nxt; s2 != bstates; s2 = s2->nxt) {  /*  and states s2 to the right of s */
++      if(s->final == s2->final && s->id == s2->id) {  /* if final and id match */
++        s->id = ++gstate_id;                          /* disambiguate by assigning unused id */
++      }
++    }
++  }
++
+   if(tl_stats) {
+     getrusage(RUSAGE_SELF, &tr_fin);
+     timeval_subtract (&t_diff, &tr_fin.ru_utime, &tr_debut.ru_utime);
