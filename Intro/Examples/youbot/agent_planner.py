@@ -2,7 +2,7 @@
 import roslib
 import numpy
 import Queue
-roslib.load_manifest('ltl3_NTUA')
+roslib.load_manifest('ltl3')
 import rospy
 from ltl3_NTUA.msg import pose, activity, confirmation, knowledge
 from math import sqrt, cos, sin, radians
