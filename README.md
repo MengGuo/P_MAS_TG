@@ -19,12 +19,14 @@ Features
 
 
 <p align="center">  
-  <img src="https://github.com/MengGuo/Planner_LTL_ROS/blob/master/src/figures/indep.png" width="800"/>
+  <img src="https://github.com/MengGuo/P_MAS_TG/blob/master/Intro/figures/collaborate.jpg" width="800"/>
 </p>
 
 <p align="center">  
-  <img src="https://github.com/MengGuo/Planner_LTL_ROS/blob/master/src/figures/multi.jpg" width="800"/>
+  <img src="https://github.com/MengGuo/P_MAS_TG/blob/master/Intro/figures/nor.png" width="800"/>
 </p>
+
+
 
 
 ----
