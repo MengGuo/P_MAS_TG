@@ -17,6 +17,16 @@ Features
 * Static or on-the-fly construction of the product automaton
 * Stand-alone planner
 
+
+<p align="center">  
+  <img src="https://github.com/MengGuo/Planner_LTL_ROS/blob/master/src/figures/indep.png" width="800"/>
+</p>
+
+<p align="center">  
+  <img src="https://github.com/MengGuo/Planner_LTL_ROS/blob/master/src/figures/multi.jpg" width="800"/>
+</p>
+
+
 ----
 Usage
 ----
