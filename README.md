@@ -6,14 +6,14 @@ Planner for Multiple Agent System with Temporal Goals
 -----
 Description
 -----
-this package contains implementation for plan synthesis algorithms given a finite transition system (as the agent motion model) and a Linear temporal logic formula (as the agent task). It outputs the static plan as a sequence of agent motion and action, required to fulfill the task. 
+This package contains implementation for plan synthesis algorithms given a finite transition system (as the agent motion model) and a Linear temporal logic formula (as the agent task). It outputs the static plan as a sequence of agent motion and action, required to fulfill the task. 
 
 <p align="center">  
-  <img src="https://github.com/MengGuo/P_MAS_TG/blob/master/Intro/figures/collaborate.jpg" width="800"/>
+  <img src="https://github.com/MengGuo/P_MAS_TG/blob/master/Intro/figures/collaborate.jpg" width="600"/>
 </p>
 
 <p align="center">  
-  <img src="https://github.com/MengGuo/P_MAS_TG/blob/master/Intro/figures/nor.png" width="800"/>
+  <img src="https://github.com/MengGuo/P_MAS_TG/blob/master/Intro/figures/nor.png" width="600"/>
 </p>
 
 
@@ -24,7 +24,7 @@ Features
 * Soft specification is optional.
 * NetworkX structure for FTS, Buchi and Product automata.
 * Static or on-the-fly construction of the product automaton.
-* Stand-alone planner
+* Stand-alone planner.
 
 ```python
 from P_MAS_TG.ts import MotionFts, ActionModel, MotActModel
