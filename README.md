@@ -8,6 +8,15 @@ Description
 -----
 this package contains implementation for plan synthesis algorithms given a finite transition system (as the agent motion model) and a Linear temporal logic formula (as the agent task). It outputs the static plan as a sequence of agent motion and action, required to fulfill the task. 
 
+<p align="center">  
+  <img src="https://github.com/MengGuo/P_MAS_TG/blob/master/Intro/figures/collaborate.jpg" width="800"/>
+</p>
+
+<p align="center">  
+  <img src="https://github.com/MengGuo/P_MAS_TG/blob/master/Intro/figures/nor.png" width="800"/>
+</p>
+
+
 -----
 Features
 -----
@@ -44,14 +53,6 @@ robot_planner.optimal(10,'static')
 
 * Generate `.dat` for MatLAB to load Buchi and product automata model. See [square_world.py](https://github.com/MengGuo/P_MAS_TG/blob/master/Intro/Examples/to_matlab/square_world.py).
 
-
-<p align="center">  
-  <img src="https://github.com/MengGuo/P_MAS_TG/blob/master/Intro/figures/collaborate.jpg" width="800"/>
-</p>
-
-<p align="center">  
-  <img src="https://github.com/MengGuo/P_MAS_TG/blob/master/Intro/figures/nor.png" width="800"/>
-</p>
 
 
 
