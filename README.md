@@ -60,7 +60,7 @@ robot_planner.optimal(10,'static')
 ----
 Debugging
 ----
-* install python packages like networkx, ply.
-* add this package to your PYTHONPATH, to import it in your own project.
+* Install python packages like networkx, ply.
+* Add this package to your PYTHONPATH, to import it in your own project.
 * ltlba_32 and ltlba_64 are executable files complied under OS X. For other OS, please follow [ltl2ba/README.txt](https://github.com/MengGuo/P_MAS_TG/blob/master/Install_ltl2ba/README.txt).
 * Try [test.py](https://github.com/MengGuo/P_MAS_TG/blob/master/test.py) and other examples in the [Examples](https://github.com/MengGuo/P_MAS_TG/tree/master/Intro/Examples) folder. 
