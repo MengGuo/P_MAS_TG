@@ -13,10 +13,10 @@ Features
 -----
 * Action model can be muted if only motion is concerned.
 * Soft specification is optional.
-* NetworkX structure for FTS, Buchi and Product.
+* NetworkX structure for FTS, Buchi and Product automata.
 * Static or on-the-fly construction of the product automaton.
 * Stand-alone planner
-* Generate `.dat` for MatLAB to load Buchi and product automata model. See [square_world.py https://github.com/MengGuo/P_MAS_TG/blob/master/Intro/Examples/to_matlab/square_world.py].
+* Generate `.dat` for MatLAB to load Buchi and product automata model. See [square_world.py](https://github.com/MengGuo/P_MAS_TG/blob/master/Intro/Examples/to_matlab/square_world.py).
 
 
 <p align="center">  
@@ -33,7 +33,7 @@ Features
 ----
 Debugging
 ----
-* install python packages like networkx, ply
-* add this package to your PYTHONPATH, to import it in your own project
-* ltlba_32 and ltlba_64 are executable files complied under OS X. For other OS, please follow [ltl2ba/README.txt https://github.com/MengGuo/P_MAS_TG/blob/master/Install_ltl2ba/README.txt]
-* Try [test.py https://github.com/MengGuo/P_MAS_TG/blob/master/test.py] and other examples in the [Examples https://github.com/MengGuo/P_MAS_TG/tree/master/Intro/Examples] folder. 
+* install python packages like networkx, ply.
+* add this package to your PYTHONPATH, to import it in your own project.
+* ltlba_32 and ltlba_64 are executable files complied under OS X. For other OS, please follow [ltl2ba/README.txt](https://github.com/MengGuo/P_MAS_TG/blob/master/Install_ltl2ba/README.txt).
+* Try [test.py https://github.com/MengGuo/P_MAS_TG/blob/master/test.py] and other examples in the [Examples](https://github.com/MengGuo/P_MAS_TG/tree/master/Intro/Examples) folder. 
