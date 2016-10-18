@@ -13,6 +13,8 @@ def run_ltl2ba(formula):
     raw_output = check_output([ltl2ba, "-f", "%s" % formula])
     ascii_decoder = getdecoder("ascii")
     (output, _) = ascii_decoder(raw_output)
+    #print 'Output from ltl2ba'
+    #print output
     return output
 
 def parse_ltl(formula):

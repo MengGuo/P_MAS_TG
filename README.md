@@ -20,6 +20,7 @@ This package contains implementation for plan synthesis algorithms given a finit
 -----
 Features
 -----
+* Allow both normal and co-safe LTL task formulas. 
 * Action model can be muted if only motion is concerned.
 * Soft specification is optional.
 * NetworkX structure for FTS, Buchi and Product automata.

@@ -18,6 +18,12 @@ def dijkstra_plan_networkX(product, beta=10):
 	line = {}
 	# minimal circles
 	for prod_target in product.graph['accept']:
+                #print 'prod_target', prod_target
+                # accepting state in self-loop
+                if prod_target in product.predecessors(prod_target):
+                        loop[prod_target] = (product.edge[prod_target][prod_target]["weight"], [prod_target, prod_target])
+                        continue
+                # else
 		loop_pre, loop_dist = dijkstra_predecessor_and_distance(product, prod_target)
 		for target_pred in product.predecessors_iter(prod_target):
 			if target_pred in loop_dist:
@@ -41,11 +47,13 @@ def dijkstra_plan_networkX(product, beta=10):
 	if runs:
 		prefix, precost, suffix, sufcost = min(runs.values(), key = lambda p: p[1] + beta*p[3])
 		run = ProdAut_Run(product, prefix, precost, suffix, sufcost, precost+beta*sufcost)
-		#print '\n==================\n'
-		print 'dijkstra_plan_networkX done within %.2fs: precost %.2f, sufcost %.2f' %(time.time()-start, precost, sufcost)
+		print '=================='
+		print 'Dijkstra_plan_networkX done within %.2fs: precost %.2f, sufcost %.2f' %(time.time()-start, precost, sufcost)
 		return run, time.time()-start
 		#print '\n==================\n'
-	print 'no accepting run found in optimal planning!'
+	print '=================='        
+	print 'No accepting run found in optimal planning!'
+        return None, None
 
 
 def dijkstra_plan_optimal(product, beta=10, start_set=None):

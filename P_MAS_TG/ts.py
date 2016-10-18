@@ -29,8 +29,9 @@ class MotionFts(DiGraph):
             self.add_edge(f_node, t_node, weight=dist*unit_cost)
             self.add_edge(t_node, f_node, weight=dist*unit_cost)
         for node in self.nodes_iter():
-            self.add_edge(node, node, weight=unit_cost)
-        
+            #self.add_edge(node, node, weight=unit_cost)
+            # allow self-transit to 0-cost
+            self.add_edge(node, node, weight=0)
 
     def add_full_edges(self,unit_cost=1):
         for f_node in self.nodes_iter():
@@ -91,7 +92,7 @@ class ActionModel(object):
             guard_expr = parse_guard(guard_formula)
             label = attrib[2]
             self.action[act_name] = (cost, guard_expr, label)
-        self.action['None'] = (1, parse_guard('1'), set()) 
+        self.action['None'] = (0, parse_guard('1'), set()) 
 
     def allowed_actions(self, ts_node_label):
         allow_action = set()

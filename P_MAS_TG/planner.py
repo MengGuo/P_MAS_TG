@@ -33,12 +33,22 @@ class ltl_planner(object):
 			self.product.build_initial()
 			self.product.build_accept()
 			self.run, plantime = dijkstra_plan_optimal(self.product, self.beta)
-		print 'the plan prefix:\n'
+                if self.run == None:
+                        print '---No valid has been found!---'
+                        print '---Check you FTS or task---'
+                        return 
+		#print '\n'
+                print '------------------------------'
+                print 'the prefix of plan **states**:'
+		print [n for n in self.run.line]
+                print 'the suffix of plan **states**:'
+		print [n for n in self.run.loop]
+		#print '\n'
+                print '------------------------------'
+		print 'the prefix of plan **actions**:'
 		print [n for n in self.run.pre_plan]
-		#print '\n'
-		print 'the plan suffix:\n'
+		print 'the suffix of plan **actions**:'
 		print [n for n in self.run.suf_plan]
-		#print '\n'
 		self.opt_log.append((self.Time, self.run.pre_plan, self.run.suf_plan, self.run.precost, self.run.sufcost, self.run.totalcost))
 		self.last_time = self.Time
 		self.acc_change = 0

@@ -13,15 +13,19 @@ class ProdAut(DiGraph):
 		for f_ts_node in self.graph['ts'].nodes_iter():
 			for f_buchi_node in self.graph['buchi'].nodes_iter():
 				f_prod_node = self.composition(f_ts_node, f_buchi_node)
+                                #print 'f_prod_node' , (f_ts_node, f_buchi_node)
 				for t_ts_node in self.graph['ts'].successors_iter(f_ts_node):
 					for t_buchi_node in self.graph['buchi'].successors_iter(f_buchi_node):
 							t_prod_node = self.composition(t_ts_node, t_buchi_node)
+                                                        #print 't_prod_node' , (t_ts_node, t_buchi_node)
 							label = self.graph['ts'].node[f_ts_node]['label']
 							cost = self.graph['ts'][f_ts_node][t_ts_node]['weight']
 							truth, dist = check_label_for_buchi_edge(self.graph['buchi'], label, f_buchi_node, t_buchi_node)
 							total_weight = cost + self.graph['alpha']*dist
+                                                        #print 'label,truth,total_weight', label,truth,total_weight
 							if truth:
 								self.add_edge(f_prod_node, t_prod_node, weight=total_weight)
+                                                                #print 'add edge', (f_prod_node, t_prod_node)
 
 	def composition(self, ts_node, buchi_node):
 		prod_node = (ts_node, buchi_node)
@@ -127,6 +131,11 @@ class ProdAut_Run(object):
 				self.pre_plan.append(ts_edge[1][0]) # motion 
 			else:
 				self.pre_plan.append(ts_edge[1][1]) # action
+                bridge = (self.line[-1],self.loop[0])
+                if product.graph['ts'][bridge[0]][bridge[1]]['label'] == 'goto':
+			self.pre_plan.append(bridge[1][0]) # motion 
+		else:
+			self.pre_plan.append(bridge[1][1]) # action
 		self.suf_plan = []		
 		for ts_edge in self.suf_ts_edges:
 			if product.graph['ts'][ts_edge[0]][ts_edge[1]]['label'] == 'goto':

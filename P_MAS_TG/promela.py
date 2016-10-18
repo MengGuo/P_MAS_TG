@@ -46,7 +46,10 @@ class Parser(object):
                     edges[(vertex_name, edge["dest"])] = edge["cond"]
                     edge = self.accept(Parser.edge_regex)
                 self.accept(Parser.fi_regex)
-            elif (self.accept(Parser.skip_regex) == None):
+            elif (self.accept(Parser.skip_regex) != None):
+                # self-loop with "skip"
+                edges[(vertex_name, vertex_name)] = '1'
+            else:
                 raise ParseException("Expected 'if' or 'skip' but got %s" % self.instring[self.pos])
             vertex = self.accept(Parser.vertex_regx)
         self.accept(Parser.end_regex)
