@@ -7,40 +7,42 @@ import time
 
 from P_MAS_TG.ts import MotionFts, ActionModel, MotActModel
 from P_MAS_TG.planner import ltl_planner
+from networkx import draw_networkx, spring_layout
+import matplotlib.pyplot as plt
 
 
-rectworld_nodename = "r{:d}c{:d}".format
+rectworld_nodename = "x{:d}y{:d}".format
 
-def create_rectworld(rows, columns, eight_connected=False):
+def create_rectworld(Xs, Ys, eight_connected=False):
     '''
     create a rectangular world with square cells.
     eight_connected True if diagonal motion is allowed.
     '''
     node_dict = {}
     symbols = []
-    row_range = range(0, rows)
-    column_range = range(0, columns)
-    for row in row_range:
-        for col in column_range:
-            node_name = rectworld_nodename(row, col)
-            node_dict[(col,row)] = set([node_name,])
+    X_range = range(0, Xs)
+    Y_range = range(0, Ys)
+    for X in X_range:
+        for Y in Y_range:
+            node_name = rectworld_nodename(X, Y)
+            node_dict[(X,Y)] = set([node_name,])
             symbols.append(node_name)
     g = MotionFts(node_dict, symbols, 'rectworld')
-    for row in row_range:
-        for col in column_range:
-            nodef = (row, col)
+    for X in X_range:
+        for Y in Y_range:
+            nodef = (X, Y)
             if eight_connected:
                 offsets = product([-1,0,1],[-1,0,1])
             else:
                 offsets = [(0,0),(0,1),(0,-1),(1,0),(-1,0)]
-            for (dr,dc) in offsets:
-                rt = row + dr
-                ct = col + dc
-                if rt not in row_range or ct not in column_range:
+            for (dx,dy) in offsets:
+                xt = X + dx
+                yt = Y + dy
+                if xt not in X_range or yt not in Y_range:
                     continue
-                nodet = (rt, ct)
+                nodet = (xt, yt)
                 unit_cost = 1
-                g.add_edge(nodef, nodet, weight=unit_cost)
+                g.add_edge(nodef, nodet, weight=unit_cost*(abs(dx)+abs(dy)))
     return g
 
 
@@ -56,30 +58,59 @@ robot_model = MotActModel(robot_motion, robot_action)
 
 
 # task formula
-hard_task = '<> [] r3c3'
+hard_task = '(<> x0y2) && (<> x3y0)'
 soft_task = None
 
 # set planner
 robot_planner = ltl_planner(robot_model, hard_task, soft_task)
 
+
 # synthesis
 start = time.time()
 robot_planner.optimal(10,'static')
 
-print 'full construction and synthesis done within %.2fs \n' %(time.time()-start)
+print '------------------------------'
+print 'Full construction and synthesis done within %.2fs' %(time.time()-start)
+
+
+
+#----------------------------------------
+#----------------------------------------
+# save Buchi automata to csv.dat that Matlab wants
+# important to transform string names to indexs
+ts = robot_planner.product.graph['ts']
+ts_nodes_list = ts.nodes()
+# save node name, index pairs
+# also save initial, accept stats
+f_ts_node = open('ts_node.dat','w')
+f_ts_initial = open('ts_node_initial.dat','w')
+for nd_id, nd in enumerate(ts_nodes_list):
+    # ts_node_id, ts_node_x, ts_node_y
+    f_ts_node.write('%d, %d, %d\n' %(nd_id, nd[0][0], nd[0][1]))
+    if nd in ts.graph['initial']:
+        f_ts_initial.write('%d\n' %nd_id)
+f_ts_node.close()
+f_ts_initial.close()
+# save edges, node name swapped by index
+f_ts_edge = open('ts_edge.dat','w')
+for (ef,et) in ts.edges_iter():
+    id_ef = ts_nodes_list.index(ef)
+    id_et = ts_nodes_list.index(et)
+    f_ts_edge.write('%d,%d\n' %(id_ef, id_et)) 
+f_ts_edge.close()
 
 #----------------------------------------
 #----------------------------------------
 # save Buchi automata to csv.dat that Matlab wants
 # important to transform string names to indexs
 buchi = robot_planner.product.graph['buchi']
-nodes_list = buchi.nodes()
+buchi_nodes_list = buchi.nodes()
 # save node name, index pairs
 # also save initial, accept states
 f_buchi_node = open('buchi_node.dat','w')
 f_buchi_initial = open('buchi_node_initial.dat','w')
 f_buchi_accept = open('buchi_node_accept.dat','w')
-for nd_id, nd in enumerate(nodes_list):
+for nd_id, nd in enumerate(buchi_nodes_list):
     f_buchi_node.write('%d,%s\n' %(nd_id, nd))
     if nd in buchi.graph['initial']:
         f_buchi_initial.write('%d\n' %nd_id)
@@ -91,8 +122,8 @@ f_buchi_accept.close()
 # save edges, node name swapped by index
 f_buchi_edge = open('buchi_edge.dat','w')
 for (ef,et) in buchi.edges_iter():
-    id_ef = nodes_list.index(ef)
-    id_et = nodes_list.index(et)
+    id_ef = buchi_nodes_list.index(ef)
+    id_et = buchi_nodes_list.index(et)
     f_buchi_edge.write('%d,%d\n' %(id_ef, id_et)) 
 f_buchi_edge.close()
 
@@ -109,7 +140,9 @@ f_prod_node = open('prod_node.dat','w')
 f_prod_initial = open('prod_node_initial.dat','w')
 f_prod_accept = open('prod_node_accept.dat','w')
 for nd_id, nd in enumerate(prod_nodes_list):
-    f_prod_node.write('%d,%s\n' %(nd_id, nd))
+    #f_prod_node.write('%d,%s\n' %(nd_id, nd))
+    # prod_node_id, ts_node_x, ts_node_y
+    f_prod_node.write('%d,%d,%d\n' %(nd_id, nd[0][0][0], nd[0][0][1]))
     if nd in prod.graph['initial']:
         f_prod_initial.write('%d\n' %nd_id)
     if nd in prod.graph['accept']:
@@ -126,7 +159,25 @@ for (ef,et) in prod.edges_iter():
 f_prod_edge.close()
 
 
+print '------------------------------'
+print 'Check *.mat files and load them in Matlab.'
 
+
+
+print '------------------------------'
+print 'Check *.pdf for visualization of ts, buchi and prod'
+draw_networkx(ts,pos=spring_layout(ts))
+plt.savefig('ts.pdf',bbox_inches='tight')
+plt.clf()
+
+draw_networkx(buchi,pos=spring_layout(buchi))
+plt.savefig('buchi.pdf',bbox_inches='tight')
+plt.clf()
+
+draw_networkx(prod,pos=spring_layout(prod))
+plt.savefig('prod.pdf',bbox_inches='tight')
 #-------------------
 # load all .dat by 'csvread()' in matlab
 #-------------------
+
+

@@ -1,2 +1,4 @@
-0,accept_S2
+0,T0_S2
 1,T0_init
+2,accept_all
+3,T1_S3
