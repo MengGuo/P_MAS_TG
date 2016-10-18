@@ -58,7 +58,7 @@ robot_model = MotActModel(robot_motion, robot_action)
 
 
 # task formula
-hard_task = '(<> x0y5)'
+hard_task = '(<> x0y3) && (<> x3y1)'
 soft_task = None
 
 # set planner
