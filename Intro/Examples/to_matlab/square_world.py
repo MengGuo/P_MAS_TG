@@ -82,8 +82,8 @@ ts = robot_planner.product.graph['ts']
 ts_nodes_list = ts.nodes()
 # save node name, index pairs
 # also save initial, accept stats
-f_ts_node = open('ts_node.dat','w')
-f_ts_initial = open('ts_node_initial.dat','w')
+f_ts_node = open('data/ts_node.dat','w')
+f_ts_initial = open('data/ts_node_initial.dat','w')
 for nd_id, nd in enumerate(ts_nodes_list):
     # ts_node_id, ts_node_x, ts_node_y
     f_ts_node.write('%d, %d, %d\n' %(nd_id, nd[0][0], nd[0][1]))
@@ -92,7 +92,7 @@ for nd_id, nd in enumerate(ts_nodes_list):
 f_ts_node.close()
 f_ts_initial.close()
 # save edges, node name swapped by index
-f_ts_edge = open('ts_edge.dat','w')
+f_ts_edge = open('data/ts_edge.dat','w')
 for (ef,et) in ts.edges_iter():
     id_ef = ts_nodes_list.index(ef)
     id_et = ts_nodes_list.index(et)
@@ -107,9 +107,9 @@ buchi = robot_planner.product.graph['buchi']
 buchi_nodes_list = buchi.nodes()
 # save node name, index pairs
 # also save initial, accept states
-f_buchi_node = open('buchi_node.dat','w')
-f_buchi_initial = open('buchi_node_initial.dat','w')
-f_buchi_accept = open('buchi_node_accept.dat','w')
+f_buchi_node = open('data/buchi_node.dat','w')
+f_buchi_initial = open('data/buchi_node_initial.dat','w')
+f_buchi_accept = open('data/buchi_node_accept.dat','w')
 for nd_id, nd in enumerate(buchi_nodes_list):
     f_buchi_node.write('%d,%s\n' %(nd_id, nd))
     if nd in buchi.graph['initial']:
@@ -120,7 +120,7 @@ f_buchi_node.close()
 f_buchi_initial.close()
 f_buchi_accept.close()
 # save edges, node name swapped by index
-f_buchi_edge = open('buchi_edge.dat','w')
+f_buchi_edge = open('data/buchi_edge.dat','w')
 for (ef,et) in buchi.edges_iter():
     id_ef = buchi_nodes_list.index(ef)
     id_et = buchi_nodes_list.index(et)
@@ -136,13 +136,13 @@ prod = robot_planner.product
 prod_nodes_list = prod.nodes()
 # save node name, index pairs
 # also save initial, accept states
-f_prod_node = open('prod_node.dat','w')
-f_prod_initial = open('prod_node_initial.dat','w')
-f_prod_accept = open('prod_node_accept.dat','w')
+f_prod_node = open('data/prod_node.dat','w')
+f_prod_initial = open('data/prod_node_initial.dat','w')
+f_prod_accept = open('data/prod_node_accept.dat','w')
 for nd_id, nd in enumerate(prod_nodes_list):
     #f_prod_node.write('%d,%s\n' %(nd_id, nd))
     # prod_node_id, ts_node_x, ts_node_y
-    f_prod_node.write('%d,%d,%d\n' %(nd_id, nd[0][0][0], nd[0][0][1]))
+    f_prod_node.write('%d,%d,%d,%d\n' %(nd_id, nd[0][0][0], nd[0][0][1], buchi_nodes_list.index(nd[1])))
     if nd in prod.graph['initial']:
         f_prod_initial.write('%d\n' %nd_id)
     if nd in prod.graph['accept']:
@@ -151,7 +151,7 @@ f_prod_node.close()
 f_prod_initial.close()
 f_prod_accept.close()
 # save edges, node name swapped by index
-f_prod_edge = open('prod_edge.dat','w')
+f_prod_edge = open('data/prod_edge.dat','w')
 for (ef,et) in prod.edges_iter():
     id_ef = prod_nodes_list.index(ef)
     id_et = prod_nodes_list.index(et)
@@ -167,15 +167,15 @@ print 'Check *.mat files and load them in Matlab.'
 print '------------------------------'
 print 'Check *.pdf for visualization of ts, buchi and prod'
 draw_networkx(ts,pos=spring_layout(ts))
-plt.savefig('ts.pdf',bbox_inches='tight')
+plt.savefig('figures/ts.pdf',bbox_inches='tight')
 plt.clf()
 
 draw_networkx(buchi,pos=spring_layout(buchi))
-plt.savefig('buchi.pdf',bbox_inches='tight')
+plt.savefig('figures/buchi.pdf',bbox_inches='tight')
 plt.clf()
 
 draw_networkx(prod,pos=spring_layout(prod))
-plt.savefig('prod.pdf',bbox_inches='tight')
+plt.savefig('figures/prod.pdf',bbox_inches='tight')
 #-------------------
 # load all .dat by 'csvread()' in matlab
 #-------------------
