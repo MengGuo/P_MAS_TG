@@ -8,6 +8,7 @@ import time
 from P_MAS_TG.ts import MotionFts, ActionModel, MotActModel
 from P_MAS_TG.planner import ltl_planner
 from networkx import draw_networkx, spring_layout
+from itertools import product
 import matplotlib.pyplot as plt
 
 
@@ -47,7 +48,7 @@ def create_rectworld(Xs, Ys, eight_connected=False):
 
 
 # create motion model
-robot_motion = create_rectworld(4,4,False)
+robot_motion = create_rectworld(4,4,True)
 robot_motion.set_initial((0,0))
 
 # empty action model
@@ -58,7 +59,7 @@ robot_model = MotActModel(robot_motion, robot_action)
 
 
 # task formula
-hard_task = '(<> x0y3) && (<> x3y1)'
+hard_task = '(<> x0y3) && (<> x3y2)'
 soft_task = None
 
 # set planner
@@ -76,7 +77,7 @@ print 'Full construction and synthesis done within %.2fs' %(time.time()-start)
 
 #----------------------------------------
 #----------------------------------------
-# save Buchi automata to csv.dat that Matlab wants
+# save transition system to csv.dat that Matlab wants
 # important to transform string names to indexs
 ts = robot_planner.product.graph['ts']
 ts_nodes_list = ts.nodes()
@@ -86,7 +87,7 @@ f_ts_node = open('data/ts_node.dat','w')
 f_ts_initial = open('data/ts_node_initial.dat','w')
 for nd_id, nd in enumerate(ts_nodes_list):
     # ts_node_id, ts_node_x, ts_node_y
-    f_ts_node.write('%d, %d, %d\n' %(nd_id, nd[0][0], nd[0][1]))
+    f_ts_node.write('%d,%d,%d\n' %(nd_id, nd[0][0], nd[0][1]))
     if nd in ts.graph['initial']:
         f_ts_initial.write('%d\n' %nd_id)
 f_ts_node.close()
@@ -111,7 +112,7 @@ f_buchi_node = open('data/buchi_node.dat','w')
 f_buchi_initial = open('data/buchi_node_initial.dat','w')
 f_buchi_accept = open('data/buchi_node_accept.dat','w')
 for nd_id, nd in enumerate(buchi_nodes_list):
-    f_buchi_node.write('%d,%s\n' %(nd_id, nd))
+    f_buchi_node.write('%d\n' %nd_id)
     if nd in buchi.graph['initial']:
         f_buchi_initial.write('%d\n' %nd_id)
     if nd in buchi.graph['accept']:
