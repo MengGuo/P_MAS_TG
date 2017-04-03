@@ -14,8 +14,6 @@ def dijkstra_plan_networkX(product, beta=10):
 	start = time.time()
 	runs = {}
 	loop = {}
-	cycle = {}
-	line = {}
 	# minimal circles
 	for prod_target in product.graph['accept']:
                 #print 'prod_target', prod_target
@@ -23,17 +21,19 @@ def dijkstra_plan_networkX(product, beta=10):
                 if prod_target in product.predecessors(prod_target):
                         loop[prod_target] = (product.edge[prod_target][prod_target]["weight"], [prod_target, prod_target])
                         continue
-                # else
-		loop_pre, loop_dist = dijkstra_predecessor_and_distance(product, prod_target)
-		for target_pred in product.predecessors_iter(prod_target):
-			if target_pred in loop_dist:
-				cycle[target_pred] = product.edge[target_pred][prod_target]["weight"] + loop_dist[target_pred]
-		if cycle:
-			opti_pred = min(cycle, key = cycle.get)
-			suffix = compute_path_from_pre(loop_pre, opti_pred)
-			loop[prod_target] = (cycle[opti_pred], suffix)
+                else:
+                        cycle = {}
+                        loop_pre, loop_dist = dijkstra_predecessor_and_distance(product, prod_target)
+                        for target_pred in product.predecessors_iter(prod_target):
+                                if target_pred in loop_dist:
+                                        cycle[target_pred] = product.edge[target_pred][prod_target]["weight"] + loop_dist[target_pred]
+                        if cycle:
+                                opti_pred = min(cycle, key = cycle.get)
+                                suffix = compute_path_from_pre(loop_pre, opti_pred)
+                                loop[prod_target] = (cycle[opti_pred], suffix)
 	# shortest line
 	for prod_init in product.graph['initial']:
+                line = {}
 		line_pre, line_dist = dijkstra_predecessor_and_distance(product, prod_init)
 		for target in loop.iterkeys():
 			if target in line_dist:
