@@ -58,21 +58,21 @@ class ltl_planner(object):
 		return plantime
 
 	def find_next_move(self):
-		if self.segment == 'line' and self.index < len(self.run.pre_plan)-1:
+		if self.segment == 'line' and self.index < len(self.run.pre_plan)-2:
 			self.trace.append(self.run.line[self.index])
 			self.index += 1
 			self.next_move = self.run.pre_plan[self.index]
-		elif self.segment == 'line' and self.index == len(self.run.pre_plan)-1:
+		elif (self.segment == 'line') and ((self.index == len(self.run.pre_plan)-2) or (len(self.run.pre_plan) <= 2)):
 			self.trace.append(self.run.line[self.index])
 			self.index = 0
 			self.segment = 'loop'
 			self.next_move = self.run.suf_plan[self.index]
-		elif self.segment == 'loop' and self.index < len(self.run.suf_plan)-1:
+		elif self.segment == 'loop' and self.index < len(self.run.suf_plan)-2:
 			self.trace.append(self.run.loop[self.index])
 			self.index += 1
 			self.segment = 'loop'
 			self.next_move = self.run.suf_plan[self.index]
-		elif self.segment == 'loop' and self.index == len(self.run.suf_plan)-1:
+		elif (self.segment == 'loop') and ((self.index == len(self.run.suf_plan)-2) or (len(self.run.suf_plan) <= 2)):
 			self.trace.append(self.run.loop[self.index])
 			self.index = 0
 			self.segment = 'loop'
