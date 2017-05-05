@@ -28,6 +28,7 @@ def mission_to_buchi(hard_spec, soft_spec):
         buchi = buchi_from_ltl(soft_spec,'soft_buchi')
     elif (hard_spec and soft_spec):
         buchi = DuoBA_from_ltls(hard_spec, soft_spec)
+    print 'full Buchi constructed with %d states and %s transitions' %(len(buchi.nodes()), len(buchi.edges()))         
     return buchi
 
 def DuoBA_from_ltls(hard_spec, soft_spec):

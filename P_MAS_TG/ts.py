@@ -169,6 +169,7 @@ class MotActModel(DiGraph):
                     yield prod_node_to, cost
             self.graph['region'].node[self.node[prod_node]['region']]['status'] = 'confirmed'
             self.node[prod_node]['marker'] = 'visited'
+        print 'full FTS model constructed with %d states and %s transitions' %(len(self.nodes()), len(self.edges()))             
 
     def fly_predecessors_iter(self, prod_node): 
         reg, act = self.projection(prod_node)
