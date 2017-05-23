@@ -7,7 +7,7 @@ tokens = (
         "TRUE",
         "LPAREN", "RPAREN")
 
-t_SYMBOL = r"^\w+$"
+t_SYMBOL = r"[a-z]+[a-z0-9]*"
 t_TRUE   = r"1"
 t_AND    = r"&&"
 t_OR     = r"\|\|"
