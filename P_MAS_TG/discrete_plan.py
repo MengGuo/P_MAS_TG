@@ -19,14 +19,14 @@ def dijkstra_plan_networkX(product, beta=10):
                 #print 'prod_target', prod_target
                 # accepting state in self-loop
                 if prod_target in product.predecessors(prod_target):
-                        loop[prod_target] = (product.edge[prod_target][prod_target]["weight"], [prod_target, prod_target])
+                        loop[prod_target] = (product.edges[prod_target,prod_target]["weight"], [prod_target, prod_target])
                         continue
                 else:
                         cycle = {}
                         loop_pre, loop_dist = dijkstra_predecessor_and_distance(product, prod_target)
                         for target_pred in product.predecessors(prod_target):
                                 if target_pred in loop_dist:
-                                        cycle[target_pred] = product.edge[target_pred][prod_target]["weight"] + loop_dist[target_pred]
+                                        cycle[target_pred] = product.edges[target_pred,prod_target]["weight"] + loop_dist[target_pred]
                         if cycle:
                                 opti_pred = min(cycle, key = cycle.get)
                                 suffix = compute_path_from_pre(loop_pre, opti_pred)
@@ -159,7 +159,7 @@ def dijkstra_loop(product, prod_accep):
 		if tail:
 			accep_pre = tail[-1]
 			paths[accep_pre] = tail
-			costs[accep_pre] = cost + product.edge[accep_pre][prod_accep]['weight']
+			costs[accep_pre] = cost + product.edges[accep_pre,prod_accep]['weight']
 	if costs:
 		min_pre = min(costs.keys(), key=lambda p: costs[p])
 		min_loop =  paths[min_pre]

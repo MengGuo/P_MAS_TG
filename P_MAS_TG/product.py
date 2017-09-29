@@ -78,7 +78,7 @@ class ProdAut(DiGraph):
 			(self.graph['ts'].graph['region'].node[
 				self.graph['ts'].node[self.node[f_prod_node]['ts']]['region']]['status'] == 'confirmed')):
 			for t_prod_node in self.successors(f_prod_node):
-				yield t_prod_node, self.edge[f_prod_node][t_prod_node]['weight']
+				yield t_prod_node, self.edges[f_prod_node,t_prod_node]['weight']
 		else:
 			self.remove_edges_from(self.out_edges(f_prod_node))
 			for t_ts_node,cost in self.graph['ts'].fly_successors(f_ts_node):

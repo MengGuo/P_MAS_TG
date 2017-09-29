@@ -58,8 +58,8 @@ def DuoBA_from_ltls(hard_spec, soft_spec):
                 t_s_node not in DuoBA.graph['soft'].neighbors(f_s_node)):
                 continue
                 # relaxed because no common input alphabets are enabled
-            hardguard = DuoBA.graph['hard'].edge[f_h_node][t_h_node]['guard']
-            softguard = DuoBA.graph['soft'].edge[f_s_node][t_s_node]['guard']
+            hardguard = DuoBA.graph['hard'].edges[f_h_node,t_h_node]['guard']
+            softguard = DuoBA.graph['soft'].edges[f_s_node,t_s_node]['guard']
             if ((f_h_node not in DuoBA.graph['hard'].graph['accept'] and 
                 f_level == 1 and t_level == 1) or 
                 (f_h_node in DuoBA.graph['hard'].graph['accept'] and 
@@ -77,15 +77,15 @@ def check_duo_attr(DuoBA, node):
 def check_label_for_buchi_edge(buchi, label, f_buchi_node, t_buchi_node):
     buchi_type = buchi.graph['type']
     if buchi_type == 'hard_buchi':
-        truth = buchi.edge[f_buchi_node][t_buchi_node]['guard'].check(label)
+        truth = buchi.edges[f_buchi_node, t_buchi_node]['guard'].check(label)
         dist = 0
     if buchi_type == 'soft_buchi':
         truth = True
-        dist = buchi.edge[f_buchi_node][t_buchi_node]['guard'].distance(label)
+        dist = buchi.edges[f_buchi_node, t_buchi_node]['guard'].distance(label)
     if buchi_type == 'safe_buchi':
-        truth = buchi.edge[f_buchi_node][t_buchi_node]['hardguard'].check(label)
+        truth = buchi.edges[f_buchi_node, t_buchi_node]['hardguard'].check(label)
         if truth:
-            dist = buchi.edge[f_buchi_node][t_buchi_node]['softguard'].distance(label)
+            dist = buchi.edges[f_buchi_node, t_buchi_node]['softguard'].distance(label)
         else:
             dist = 1000
     return truth, dist

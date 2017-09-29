@@ -150,7 +150,7 @@ class MotActModel(DiGraph):
         if ((self.node[prod_node]['marker'] == 'visited') and 
             (self.graph['region'].node[self.node[prod_node]['region']]['status'] == 'confirmed')):
             for prod_node_to in self.successors(prod_node):
-                yield prod_node_to, self.edge[prod_node][prod_node_to]['weight']
+                yield prod_node_to, self.edges[prod_node, prod_node_to]['weight']
         else:
             self.remove_edges_from(self.out_edges(prod_node))
             # actions 
@@ -164,8 +164,8 @@ class MotActModel(DiGraph):
             for reg_to in self.graph['region'].successors(reg):
                 if reg_to != reg:
                     prod_node_to = self.composition(reg_to, 'None')
-                    cost = self.graph['region'][reg][reg_to]['weight']
-                    self.add_edge(prod_node, prod_node_to, weight=cost, label= 'goto')         
+                    cost = self.graph['region'][reg][reg_to]['weight'] 
+                   self.add_edge(prod_node, prod_node_to, weight=cost, label= 'goto')         
                     yield prod_node_to, cost
             self.graph['region'].node[self.node[prod_node]['region']]['status'] = 'confirmed'
             self.node[prod_node]['marker'] = 'visited'
