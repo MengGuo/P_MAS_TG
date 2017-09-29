@@ -50,8 +50,8 @@ def DuoBA_from_ltls(hard_spec, soft_spec):
             accept.add(DuoNode)
     DuoBA.graph['accept'] = accept
     DuoBA.graph['initial'] = initial
-    for f_duonode in DuoBA.nodes_iter():
-        for t_duonode in DuoBA.nodes_iter():
+    for f_duonode in DuoBA.nodes():
+        for t_duonode in DuoBA.nodes():
             f_h_node, f_s_node, f_level = check_duo_attr(DuoBA, f_duonode)
             t_h_node, t_s_node, t_level = check_duo_attr(DuoBA, t_duonode)
             if (t_h_node not in DuoBA.graph['hard'].neighbors(f_h_node) or 

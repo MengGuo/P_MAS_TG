@@ -24,7 +24,7 @@ def dijkstra_plan_networkX(product, beta=10):
                 else:
                         cycle = {}
                         loop_pre, loop_dist = dijkstra_predecessor_and_distance(product, prod_target)
-                        for target_pred in product.predecessors_iter(prod_target):
+                        for target_pred in product.predecessors(prod_target):
                                 if target_pred in loop_dist:
                                         cycle[target_pred] = product.edge[target_pred][prod_target]["weight"] + loop_dist[target_pred]
                         if cycle:
@@ -137,7 +137,7 @@ def dijkstra_targets(product, prod_source, prod_targets):
 		tovisit.remove(f_prod_node)
 		visited.add(f_prod_node)
 		d = dist[f_prod_node]
-		for (t_prod_node, cost) in product.fly_successors_iter(f_prod_node):
+		for (t_prod_node, cost) in product.fly_successors(f_prod_node):
 		 	nd = d + cost 
 		 	if nd < dist[t_prod_node]:
 		 		dist[t_prod_node] = nd
@@ -196,7 +196,7 @@ def prod_states_given_history(product, trace):
 		for p in trace[1:-1]:
 			S2 = set()
 			for f_node in S1:
-				for t_node in product.fly_successors_iter(f_node):
+				for t_node in product.fly_successors(f_node):
 					if t_node[0]==p:
 						S2.add(t_node)
 			S1 = S2.copy()
@@ -227,7 +227,7 @@ def validate_and_revise_after_ts_change(run, product, sense_info, com_info):
 			(f_ts_node, f_buchi_node) = prod_edge[0]
 			(t_ts_node, t_buchi_node) = prod_edge[1] 
 			succ_prod = set()
-			for prod_node_to, weight in product.graph['ts'].fly_successors_iter(f_ts_node):
+			for prod_node_to, weight in product.graph['ts'].fly_successors(f_ts_node):
 				succ_prod.add(prod_node_to)
 			if t_ts_node not in succ_prod:
 					print 'Oops, the current plan prefix contains invalid edges, need revision!'
@@ -237,7 +237,7 @@ def validate_and_revise_after_ts_change(run, product, sense_info, com_info):
 			(f_ts_node, f_buchi_node) = prod_edge[0]
 			(t_ts_node, t_buchi_node) = prod_edge[1] 
 			succ_prod = set()
-			for prod_node_to, weight in product.graph['ts'].fly_successors_iter(f_ts_node):
+			for prod_node_to, weight in product.graph['ts'].fly_successors(f_ts_node):
 				succ_prod.add(prod_node_to)
 			if t_ts_node not in succ_prod:
 					print 'Oops, the current plan suffix contains invalid edges, need revision!'

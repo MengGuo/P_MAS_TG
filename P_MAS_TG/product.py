@@ -10,12 +10,12 @@ class ProdAut(DiGraph):
 		DiGraph.__init__(self, ts=ts, buchi=buchi, alpha=alpha, initial=set(), accept=set(), type='ProdAut')
 
 	def build_full(self):
-		for f_ts_node in self.graph['ts'].nodes_iter():
-			for f_buchi_node in self.graph['buchi'].nodes_iter():
+		for f_ts_node in self.graph['ts'].nodes():
+			for f_buchi_node in self.graph['buchi'].nodes():
 				f_prod_node = self.composition(f_ts_node, f_buchi_node)
                                 #print 'f_prod_node' , (f_ts_node, f_buchi_node)
-				for t_ts_node in self.graph['ts'].successors_iter(f_ts_node):
-					for t_buchi_node in self.graph['buchi'].successors_iter(f_buchi_node):
+				for t_ts_node in self.graph['ts'].successors(f_ts_node):
+					for t_buchi_node in self.graph['buchi'].successors(f_buchi_node):
 							t_prod_node = self.composition(t_ts_node, t_buchi_node)
                                                         #print 't_prod_node' , (t_ts_node, t_buchi_node)
 							label = self.graph['ts'].node[f_ts_node]['label']
@@ -53,15 +53,15 @@ class ProdAut(DiGraph):
 	def build_accept(self):
 		self.graph['ts'].build_full()
 		accept = set()
-		for ts_node in self.graph['ts'].nodes_iter():
+		for ts_node in self.graph['ts'].nodes():
 			for buchi_accept in self.graph['buchi'].graph['accept']:
 				accept_prod_node = self.composition(ts_node, buchi_accept)
 
 	def accept_predecessors(self, accept_node):
 		pre_set = set()
 		t_ts_node, t_buchi_node = self.projection(accept_node)
-		for f_ts_node, cost in self.graph['ts'].fly_predecessors_iter(t_ts_node):
-			for f_buchi_node in self.graph['buchi'].predecessors_iter(t_buchi_node):
+		for f_ts_node, cost in self.graph['ts'].fly_predecessors(t_ts_node):
+			for f_buchi_node in self.graph['buchi'].predecessors(t_buchi_node):
 				f_prod_node = self.composition(f_ts_node, f_buchi_node)
 				label = self.graph['ts'].node[f_ts_node]['label']
 				truth, dist = check_label_for_buchi_edge(self.graph['buchi'], label, f_buchi_node, t_buchi_node)
@@ -71,18 +71,18 @@ class ProdAut(DiGraph):
 					self.add_edge(f_prod_node, accept_node, weight=total_weight)
 		return pre_set
 
-	def fly_successors_iter(self, f_prod_node):
+	def fly_successors(self, f_prod_node):
 		f_ts_node, f_buchi_node = self.projection(f_prod_node)
 		# been visited before, and hasn't changed 
 		if ((self.node[f_prod_node]['marker'] == 'visited') and 
 			(self.graph['ts'].graph['region'].node[
 				self.graph['ts'].node[self.node[f_prod_node]['ts']]['region']]['status'] == 'confirmed')):
-			for t_prod_node in self.successors_iter(f_prod_node):
+			for t_prod_node in self.successors(f_prod_node):
 				yield t_prod_node, self.edge[f_prod_node][t_prod_node]['weight']
 		else:
 			self.remove_edges_from(self.out_edges(f_prod_node))
-			for t_ts_node,cost in self.graph['ts'].fly_successors_iter(f_ts_node):
-				for t_buchi_node in self.graph['buchi'].successors_iter(f_buchi_node):
+			for t_ts_node,cost in self.graph['ts'].fly_successors(f_ts_node):
+				for t_buchi_node in self.graph['buchi'].successors(f_buchi_node):
 					t_prod_node = self.composition(t_ts_node, t_buchi_node)
 					label = self.graph['ts'].node[f_ts_node]['label']
 					truth, dist = check_label_for_buchi_edge(self.graph['buchi'], label, f_buchi_node, t_buchi_node)
