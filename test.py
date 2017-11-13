@@ -59,14 +59,14 @@ robot_model = MotActModel(robot_motion, robot_action)
 ##############################
 # specify tasks
 ########## only hard
-# hard_task = '<>(r1 && <> (r2 && <> r6)) && (<>[] r6)'
-#hard_task = '(<>(pick && <> drop)) && ([]<> r3) && ([]<> r6)'
-#soft_task = None
+#hard_task = '<>(r1 && <> (r2 && <> r6)) && (<>[] r6)'
+hard_task = '<>(r1 && <> (r2 && <> r6)) && ([]<> r6) && ([]<> r1) && [] <>(r1 -> X r5)'
+soft_task = None
 
 
 ########## soft and hard
-hard_task = '(([]<> r3) && ([]<> r4))'
-soft_task = '([]! b)'
+# hard_task = '(([]<> r3) && ([]<> r4))'
+# soft_task = '([]! b)'
 
 
 
