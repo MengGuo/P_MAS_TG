@@ -17,12 +17,13 @@ This package contains implementation for plan synthesis algorithms given a finit
 </p>
 
 -----
-Reference
+References
 -----
 **Multi-agent Plan Reconfiguration under Local LTL Specifications**.
 Meng Guo and Dimos V. Dimarogonas. International Journal of Robotics Research (IJRR), 34(2): 218-235, Feb 2015. [\[link\]](http://journals.sagepub.com/doi/abs/10.1177/0278364914546174) [\[PDF\]](https://people.kth.se/~mengg/papers/ijrr15.pdf) 
 
-
+**Task and Motion Coordination for Heterogeneous Multi-agent Systems with Loosely-coupled Local Tasks**.
+Meng Guo and Dimos V. Dimarogonas. IEEE Transactions on Automation Science and Engineering (T-ASE), 4(2): 797-808, Apr 2017. [\[link\]](http://ieeexplore.ieee.org/document/7778995/)[\[PDF\]](https://people.kth.se/~mengg/papers/tase17.pdf) 
 -----
 Features
 -----
