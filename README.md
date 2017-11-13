@@ -16,8 +16,9 @@ This package contains implementation for plan synthesis algorithms given a finit
   <img src="https://github.com/MengGuo/P_MAS_TG/blob/master/Intro/figures/nor.png" width="600"/>
 </p>
 
-Reference:
-
+-----
+Reference
+-----
 Multi-agent Plan Reconfiguration under Local LTL Specifications.
 Meng Guo and Dimos V. Dimarogonas. International Journal of Robotics Research (IJRR), 34(2): 218-235, Feb 2015. [\[link\]](http://journals.sagepub.com/doi/abs/10.1177/0278364914546174) [\[PDF\]](https://people.kth.se/~mengg/papers/ijrr15.pdf) 
 
