@@ -43,12 +43,17 @@ class ltl_planner(object):
 		print [n for n in self.run.line]
                 print 'the suffix of plan **states**:'
 		print [n for n in self.run.loop]
+                print '------------------------------'
+                print 'the prefix of plan **aps**:'
+		print [self.product.graph['ts'].node[n]['label'] for n in self.run.line]
+                print 'the suffix of plan **aps**:'
+		print [self.product.graph['ts'].node[n]['label'] for n in self.run.loop]
 		#print '\n'
                 print '------------------------------'
-		print 'the prefix of plan **actions**:'
-		print [n for n in self.run.pre_plan]
-		print 'the suffix of plan **actions**:'
-		print [n for n in self.run.suf_plan]
+		# print 'the prefix of plan **actions**:'
+		# print [n for n in self.run.pre_plan]
+		# print 'the suffix of plan **actions**:'
+		# print [n for n in self.run.suf_plan]
 		self.opt_log.append((self.Time, self.run.pre_plan, self.run.suf_plan, self.run.precost, self.run.sufcost, self.run.totalcost))
 		self.last_time = self.Time
 		self.acc_change = 0

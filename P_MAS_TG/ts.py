@@ -33,6 +33,28 @@ class MotionFts(DiGraph):
             # allow self-transit to 0-cost
             self.add_edge(node, node, weight=0)
 
+    def add_un_edges_by_ap(self, edge_list, unit_cost=1):
+        for edge in edge_list:            
+            f_ap = edge[0]
+            t_ap = edge[1]
+            f_nodes = [n for n in self.nodes() if f_ap in self.node[n]['label']]
+            if len(f_nodes)> 1:
+                print 'ambiguity more than one with f_ap %s, see %s' %(f_ap, str(f_nodes))
+            else:
+                f_node = f_nodes[0]
+            t_nodes = [n for n in self.nodes() if t_ap in self.node[n]['label']]
+            if len(t_nodes)> 1:
+                print 'ambiguity more than one with t_ap %s, see %s' %(t_ap, str(t_nodes))
+            else:
+                t_node = t_nodes[0]
+            dist = distance(f_node, t_node)
+            self.add_edge(f_node, t_node, weight=dist*unit_cost)
+            self.add_edge(t_node, f_node, weight=dist*unit_cost)
+        for node in self.nodes():
+            #self.add_edge(node, node, weight=unit_cost)
+            # allow self-transit to 0-cost
+            self.add_edge(node, node, weight=0)            
+
     def add_full_edges(self,unit_cost=1):
         for f_node in self.nodes():
             for t_node in self.nodes():
@@ -142,7 +164,7 @@ class MotActModel(DiGraph):
                 for reg_to in self.graph['region'].successors(reg):
                     prod_node_to = self.composition(reg_to, 'None')
                     self.add_edge(prod_node, prod_node_to, weight=self.graph['region'][reg][reg_to]['weight'], label= 'goto', marker= 'visited')
-        print 'full_model constructed with %d states and %s transitions' %(len(self.nodes()), len(self.edges())) 
+        print 'full TS model constructed with %d states and %s transitions' %(len(self.nodes()), len(self.edges())) 
     
     def fly_successors(self, prod_node): 
         reg, act = self.projection(prod_node)
