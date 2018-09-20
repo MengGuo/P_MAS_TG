@@ -88,15 +88,16 @@ f_ts_initial = open('data/ts_node_initial.dat','w')
 for nd_id, nd in enumerate(ts_nodes_list):
     # ts_node_id, ts_node_x, ts_node_y
     f_ts_node.write('%d,%d,%d\n' %(nd_id, nd[0][0], nd[0][1]))
+    ts.nodes[nd]['index'] = nd_id
     if nd in ts.graph['initial']:
         f_ts_initial.write('%d\n' %nd_id)
 f_ts_node.close()
 f_ts_initial.close()
 # save edges, node name swapped by index
 f_ts_edge = open('data/ts_edge.dat','w')
-for (ef,et) in ts.edges_iter():
-    id_ef = ts_nodes_list.index(ef)
-    id_et = ts_nodes_list.index(et)
+for e in ts.edges():
+    id_ef = ts.nodes[e[0]]['index']
+    id_et = ts.nodes[e[1]]['index']
     f_ts_edge.write('%d,%d\n' %(id_ef, id_et)) 
 f_ts_edge.close()
 
@@ -112,6 +113,7 @@ f_buchi_node = open('data/buchi_node.dat','w')
 f_buchi_initial = open('data/buchi_node_initial.dat','w')
 f_buchi_accept = open('data/buchi_node_accept.dat','w')
 for nd_id, nd in enumerate(buchi_nodes_list):
+    buchi.nodes[nd]['index'] = nd_id
     f_buchi_node.write('%d\n' %nd_id)
     if nd in buchi.graph['initial']:
         f_buchi_initial.write('%d\n' %nd_id)
@@ -122,9 +124,9 @@ f_buchi_initial.close()
 f_buchi_accept.close()
 # save edges, node name swapped by index
 f_buchi_edge = open('data/buchi_edge.dat','w')
-for (ef,et) in buchi.edges_iter():
-    id_ef = buchi_nodes_list.index(ef)
-    id_et = buchi_nodes_list.index(et)
+for e in buchi.edges():
+    id_ef = buchi.nodes[e[0]]['index']
+    id_et = buchi.nodes[e[1]]['index']
     f_buchi_edge.write('%d,%d\n' %(id_ef, id_et)) 
 f_buchi_edge.close()
 
@@ -143,7 +145,8 @@ f_prod_accept = open('data/prod_node_accept.dat','w')
 for nd_id, nd in enumerate(prod_nodes_list):
     #f_prod_node.write('%d,%s\n' %(nd_id, nd))
     # prod_node_id, ts_node_x, ts_node_y
-    f_prod_node.write('%d,%d,%d,%d\n' %(nd_id, nd[0][0][0], nd[0][0][1], buchi_nodes_list.index(nd[1])))
+    prod.nodes[nd]['index'] = nd_id
+    f_prod_node.write('%d,%d,%d,%d\n' %(nd_id, nd[0][0][0], nd[0][0][1], buchi.nodes[nd[1]]['index']))
     if nd in prod.graph['initial']:
         f_prod_initial.write('%d\n' %nd_id)
     if nd in prod.graph['accept']:
@@ -153,9 +156,9 @@ f_prod_initial.close()
 f_prod_accept.close()
 # save edges, node name swapped by index
 f_prod_edge = open('data/prod_edge.dat','w')
-for (ef,et) in prod.edges_iter():
-    id_ef = prod_nodes_list.index(ef)
-    id_et = prod_nodes_list.index(et)
+for e in prod.edges():
+    id_ef = prod.nodes[e[0]]['index']
+    id_et = prod.nodes[e[1]]['index']
     f_prod_edge.write('%d,%d\n' %(id_ef, id_et)) 
 f_prod_edge.close()
 
@@ -180,5 +183,3 @@ plt.savefig('figures/prod.pdf',bbox_inches='tight')
 #-------------------
 # load all .dat by 'csvread()' in matlab
 #-------------------
-
-
