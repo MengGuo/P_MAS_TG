@@ -3,6 +3,19 @@ P-MAS-TG
 
 Planner for Multiple Agent System with Temporal Goals 
 
+```
+@article{guo2015multi,
+  title={Multi-agent plan reconfiguration under local LTL specifications},
+  author={Guo, Meng and Dimarogonas, Dimos V},
+  journal={The International Journal of Robotics Research},
+  volume={34},
+  number={2},
+  pages={218--235},
+  year={2015},
+  publisher={SAGE Publications Sage UK: London, England}
+}
+```
+
 -----
 Description
 -----
